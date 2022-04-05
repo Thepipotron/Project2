@@ -21,7 +21,7 @@
 
 #define SCALE 8
 
-//initialize the Magnetometer given the address of the device
+//initialize the Magnetometer given the address of the devic
 int MAG_init(int addr){
     int device = wiringPiI2CSetup(addr);
 
