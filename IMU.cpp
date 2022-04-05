@@ -66,6 +66,7 @@ double * getIMUCombined(int IMU){
         imuDat[i+3] = double(getGyroDir(i,IMU))/INT16_MAX * G_SCALE;
     }
 
+    //return the values with proper units
     return imuDat;
 }
 
