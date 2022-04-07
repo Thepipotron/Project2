@@ -63,12 +63,23 @@ int UART_init(const char* port){
    
 }
 
+int write_USB(int device, const char* message){
+
+  //error checking for testing purposes, will likely be removed after confirming this code works
+  if(write(device, message, 4028) < 1){
+    printf("Error %i from write: %s\n", errno, strerror(errno));
+  }
+
+  return 0;
+
+}
 
 //I still need to test this but I dont have the right cable
 int main(){
     char const *port = "/dev/serial0";
     int usb = UART_init(port);
-    write(usb,"fuck hell yes",1024);
+    char const *message = "Hello World!";
+    write_USB(usb, message);
 
     return 0;
 }

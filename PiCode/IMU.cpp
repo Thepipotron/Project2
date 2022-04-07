@@ -70,7 +70,7 @@ double * getIMUCombined(int IMU){
     return imuDat;
 }
 
-int main(){
+/*int main(){
     
     int IMU = IMU_init(0x6a);
 
@@ -88,4 +88,4 @@ int main(){
         std::cout<<std::endl;
     }
     return 0;
-}
+}*/
