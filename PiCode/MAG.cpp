@@ -59,7 +59,7 @@ double * getMAGCombined(int MAG){
 }
 
 //test function
-int main(){
+/*int main(){
     int MAG = MAG_init(0x1c);
 
     std::cout.unsetf(std::ios::floatfield);
@@ -76,4 +76,4 @@ int main(){
         std::cout<<std::endl;
     }
     return 0;
-}
+}*/
