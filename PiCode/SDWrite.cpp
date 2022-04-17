@@ -1,6 +1,0 @@
-
-
-//test function
-void main(){
-    
-}
