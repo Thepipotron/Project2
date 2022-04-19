@@ -15,16 +15,32 @@ EN ----------- No Connection
 */
 #include <wiringSerial.h>
 #include <cstdio>
+#include <unistd.h>
 
 int main() {
-    int bluetooth  = serialOpen("/dev/ttyAMA0", 38400);
-    serialPuts(bluetooth, "AT");
-    
-    int mLength = serialDataAvail(bluetooth);
-    char message[mLength];
-    for(int i = 0; i++; i < mLength) {
-        message[i] = serialGetchar(bluetooth);
+    int bluetooth  = serialOpen("/dev/ttyS0", 9600);
+    if(bluetooth == -1) {
+        perror("ERROR\n");
+    } else {
+        printf("File Descriptor: %d\n", bluetooth);
     }
 
-    printf("Message: %s" , message);
+    serialPuts(bluetooth, "AT\r\n");
+
+    sleep(.1);
+    
+    int mLength = serialDataAvail(bluetooth);
+    if(mLength < 0 ) {
+        perror("error\n");
+    }
+
+    printf("Length of Message: %d\n", mLength);
+
+
+    char message[mLength];
+   
+    for(int i = 0; i++; i < mLength) {
+        //message[i] = serialGetchar(bluetooth);
+        printf("%c", serialGetchar(bluetooth));
+    }
 }

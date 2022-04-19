@@ -1,0 +1,8 @@
+device = bluetooth("HC-06");
+disp(device);
+configureCallback(device, "byte", 1, @readSerial);
+
+function readSerial(src,~)
+    data = read(src,,"string");
+    disp(data);
+end
