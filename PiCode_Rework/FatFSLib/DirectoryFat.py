@@ -95,6 +95,14 @@ class DirectoryFat:
         print(self.offset)
 
         self.Sector.writeBytes(self.offset,newDir,64)
+        self.validate() #re grab the data from the current directory
+
+    def addSize(self,size):
+        #start by getting the current size of the file 
+        currSize = self.ShortDir.FileSize
+
+        #write the new file size and validate
+        self.Sector.writeBytes(self.offset+32+28,convertLE(currSize+size,4),4)
 
     #implement later. makes the directory object point to a directory the user is writing to
     #def openDir()
@@ -149,8 +157,6 @@ class LongDir:
         fullEntry += formattedFileName[10:23]
         fullEntry += convertLE(0x00,2)
         fullEntry += formattedFileName[23:26]
-        print(fullEntry)
-        print(len(fullEntry))
         return fullEntry
 
                 

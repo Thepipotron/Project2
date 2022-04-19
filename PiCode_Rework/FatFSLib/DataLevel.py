@@ -76,10 +76,16 @@ class Sector:
         newBytes = before + bArray + after
         print(newBytes)
         self.disk.write(self.sector,512,newBytes)
+        self.RawBytes = self.disk.read(self.sector,1) #read new sector info back from the disk to update rawbytes
 
     def changeSec(self,sector):
         self.sector = sector
         self.RawBytes = self.disk.read(self.sector,1)
+
+    #moves pointer to the next sector
+    def next():
+        self.sector += 1
+        self.RawBytes = self.disk.read(sector,1)
 
     
 

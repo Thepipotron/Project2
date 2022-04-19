@@ -23,10 +23,23 @@ class ClusterHandle:
         #increment first file avail and dec avail cluster
         self.FSInfo.incAvailCluster()
         
+        #update Cluster and FSInfo with the new bytes
+        self.Cluster.validate()
+        self.FSInfo.validate()
+
         #return cluster number of allocated cluster
         return First
+    #give the  file currently pointed at a new cluster
+    def reallocate():
+        First = self.FSInfo.FirstAvail
 
-    #implement later add cluster to existing file
+        self.Cluster.reallocate(First)
+        self.FSInfo.incAvailCluster()
+
+        self.Cluster.validate()
+        self.FSInfo.validate()
+
+        return First
 
 
 
@@ -35,9 +48,7 @@ class FSInfo:
         self.Sector1 = Sector1
         #self.Sector2 = Sector2
         #raw bytes to minimise Reads
-        self.RawBytes = Sector1.readBytes(0,512)
-        self.FirstAvail = Sector1.readLEBytes(492,4)
-        self.SectorAvail = Sector1.readLEBytes(488,4)
+        self.validate()
         print(self.SectorAvail)
     
     #increment the first availible cluster counter and decrement the sector availible count
@@ -49,6 +60,11 @@ class FSInfo:
         #self.Sector2.writeBytes(488,convertLE(self.SectorAvail - 1,4),4)
         self.SectorAvail -= 1
 
+    #grabs any updated data from the FS
+    def validate(self):
+        self.RawBytes = self.Sector1.readBytes(0,512)
+        self.FirstAvail = self.Sector1.readLEBytes(492,4)
+        self.SectorAvail = self.Sector1.readLEBytes(488,4)
 
 
 
@@ -58,17 +74,29 @@ class Cluster:
         self.Sector1 = Sector1
         self.Sector2 = Sector2
         #raw bytes to minimise Reads
-        self.RawBytes = Sector1.readBytes(0,512)
+        self.validate()
     
     #used to allocate new cluster to a new file
     def allocate(self,firstAvail):
         offset = firstAvail * 4 #byte offset of first availible cluster
+        self.cluster = firstAvail #point the cluster number to the newly created file
         self.Sector1.writeBytes(offset, convertLE(0x0fffffff,8),8)
         self.Sector2.writeBytes(offset, convertLE(0x0fffffff,8),8)
     
     #add more space to an existing file input the cluster number of the first cluster in the file
-    def reallocate(self,start):
-        pass
+    def reallocate(self,firstAvail):
+        #first change the current cluster info to point to the new cluser
+        offset = cluster * 4
+        self.Sector1.writeBytes(offset, convertLE(firstAvail,8),8)
+        self.Sector2.writeBytes(offset, convertLE(firstAvail,8),8)
 
+        #next allocate the new cluster to the file
+        self.allocate(firstAvail)
+
+        
+
+    #grab the new data from the disk
+    def validate(self):
+        self.RawBytes = self.Sector1.readBytes(0,512)
 
 
