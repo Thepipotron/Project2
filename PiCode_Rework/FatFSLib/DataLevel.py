@@ -42,6 +42,7 @@ class Sector:
     
     #reads count bytes from the sector and returns as an int returns in LE
     def readLEBytes(self, offset, count):
+        self.RawBytes = self.disk.read(self.sector,1)
         bRes = bytearray(count)
         for c in range(0,count):
             bRes[c] = self.RawBytes[offset+c]
@@ -50,6 +51,7 @@ class Sector:
         return result
 
     def readBEBytes(self,offset,count):
+        self.RawBytes = self.disk.read(self.sector,1)
         bRes = bytearray(count)
         for c in range(0,count):
             bRes[c] = self.RawBytes[offset+c]
@@ -58,6 +60,7 @@ class Sector:
         return result
     
     def readBytes(self,offset,count):
+        self.RawBytes = self.disk.read(self.sector,1)
         bRes = bytearray(count)
         for c in range(0,count):
             bRes[c] = self.RawBytes[offset+c]
@@ -66,6 +69,7 @@ class Sector:
 
     #writes count bytes in bArray to the SD
     def writeBytes(self,offset,bArray,count):
+        print("writing to sector : " + str(self.sector))
         if(offset+count > 512):
             print("invalid write spilling over sectors")
         #first get all data before the write
@@ -83,9 +87,9 @@ class Sector:
         self.RawBytes = self.disk.read(self.sector,1)
 
     #moves pointer to the next sector
-    def next():
+    def next(self):
         self.sector += 1
-        self.RawBytes = self.disk.read(sector,1)
+        self.RawBytes = self.disk.read(self.sector,1)
 
     
 

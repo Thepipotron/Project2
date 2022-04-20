@@ -22,18 +22,24 @@ class Data:
             #is there any space left on this sector
             if self.bytesOccupied == 512:
                 #is there another sector avalible?
-                if self.sectorsOccupied == 4:
+                if self.sectorsOccupied == 3:
                     return len(bData)
                 #if not move on to the next sector and recall function
                 else:
                     self.Sector.next()
                     self.sectorsOccupied += 1
                     self.bytesOccupied = 0
-                    self.writeDat(bData)
+                    return self.writeDat(bData)
             #funky wunky case where theres space on the sector but not enough for the data
             else:
                 #chop up bData
-                toWrite = bData[0:(512-bytesOccupied)]
-                toRecall = bData[(512-bytesOccupied):len(bData)]
-                self.Sector.writeBytes(bytesOccupied,toWrite,(512-bytesOccupied))
-                self.writeDat(toRecall)
+                toWrite = bData[0:(512-self.bytesOccupied)]
+                toRecall = bData[(512-self.bytesOccupied):len(bData)]
+                self.Sector.writeBytes(self.bytesOccupied,toWrite,(512-self.bytesOccupied))
+                self.bytesOccupied = 512
+                return self.writeDat(toRecall)
+    
+    def changeSector(self, newSector):
+        self.Sector.changeSec(newSector)
+        self.bytesOccupied = 0
+        self.sectorsOccupied = 0

@@ -35,8 +35,9 @@ class FatFs:
         first = self.ClusterHandle.newCluster()
         self.DirectoryFat.createDir(dirName,first)
         #compute the cluster sector
+        print("FIRST : " + str(first))
         firstSectorCluster = ((first-2) * self.SecPerClus) + self.FirstDat
-
+        print("FIRST SEC CLUS: " + str(firstSectorCluster))
         self.Data = Data(firstSectorCluster,self.Disk)
 
     #function to write to a newly created file. Data is a string
@@ -50,11 +51,14 @@ class FatFs:
         #assume for now that at most data will only splill over 1 cluster
         if res > 0:
             cluster = self.ClusterHandle.reallocate() #give the file another cluster
-            self.Data = self.Data(cluster,self.Disk) #get the new data cluster
-            self.Data.write(bData)
+            firstSectorCluster = ((cluster-2) * self.SecPerClus) + self.FirstDat
+            print("GOING TO NEW SECTOR # : " + str(cluster))
+            self.Data.changeSector(firstSectorCluster) #get the new data cluster
+            self.Data.writeDat(bData[len(bData)-res:len(bData)])
         
         #assume all data is written add filesize to the directory
         self.DirectoryFat.addSize(len(bData))
+
 
 
     
