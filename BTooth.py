@@ -28,9 +28,3 @@ def sendBtooth(str):
     else: 
         print ("Bluetooth did not open\r\n")
 
-string1 = "This is the first test\r\n"
-string2 = "Now this is the second\r\n"
-string3 = "And finally the third\r\n"
-sendBtooth(string1)
-sendBtooth(string2)
-sendBtooth(string3)
