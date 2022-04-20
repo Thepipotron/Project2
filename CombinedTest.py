@@ -4,10 +4,10 @@
 import time
 from BTooth import sendBtooth
 import serial
-import BTooth.py
-import USB.py
+import BTooth
+import USB
 
 string = "This is to be sent by BTooth\r\n"
-sendBtooth(string)
+BTooth.sendBtooth(string)
 string2 = "This is to be sent by USB\r\n"
-sendUSB(string2)
+USB.sendUSB(string2)
