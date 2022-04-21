@@ -33,7 +33,6 @@ class GPS:
         msg = 0xB5.to_bytes(1,'big') +  0x62.to_bytes(1,'big') + 0x06.to_bytes(1,'big') + 0x00.to_bytes(2,'big')+0x01.to_bytes(2,'little') + 0x00.to_bytes(1,'little')
         cksum = computeChksum(msg)
         msg += cksum
-        print(msg)
         self.device.write(bytearray(msg))
 
     #tell how many satellites the GPS is currently locked to
@@ -43,7 +42,7 @@ class GPS:
         gga = self.data[start:end]
 
         gga = gga.split(',')
-        print(gga)
+
         return gga[7]
     
     #returns the coordinates of the current GPS location. if no coordinates then return [0,0]
@@ -120,7 +119,6 @@ class GPS:
 
         res = bytearray(0)
         buff = bytearray(1)
-        print(datSize)
         for i in range(0,datSize):
             try:
                 self.device.write(0xff.to_bytes(1,'big'))

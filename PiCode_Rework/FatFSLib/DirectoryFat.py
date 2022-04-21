@@ -90,9 +90,6 @@ class DirectoryFat:
        
 
         newDir = newLongDir + newShortDir
-        print(newDir)
-        print(len(newDir))
-        print(self.offset)
 
         self.Sector.writeBytes(self.offset,newDir,64)
         self.validate() #re grab the data from the current directory
@@ -100,7 +97,6 @@ class DirectoryFat:
     def addSize(self,size):
         #start by getting the current size of the file 
         currSize = self.ShortDir.FileSize
-        print("size : " + str(currSize))
         #write the new file size and validate
         self.Sector.writeBytes(self.offset+32+28,convertLE(currSize+size,4),4)
         

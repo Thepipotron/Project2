@@ -69,7 +69,7 @@ class Sector:
 
     #writes count bytes in bArray to the SD
     def writeBytes(self,offset,bArray,count):
-        print("writing to sector : " + str(self.sector))
+
         if(offset+count > 512):
             print("invalid write spilling over sectors")
         #first get all data before the write
@@ -78,7 +78,7 @@ class Sector:
         after = self.readBytes(offset+count, 512-count-offset)
 
         newBytes = before + bArray + after
-        print(newBytes)
+
         self.disk.write(self.sector,512,newBytes)
         self.RawBytes = self.disk.read(self.sector,1) #read new sector info back from the disk to update rawbytes
 
@@ -114,7 +114,6 @@ class Disk:
         self.sd.readblocks(sector,result)
         return result
     def write(self, sector, count, buff: bytes):
-        print("test")
         buff = bytearray(buff)
         self.sd.writeblocks(sector,buff)
 

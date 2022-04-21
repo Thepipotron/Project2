@@ -18,7 +18,6 @@ class ClusterHandle:
         #start by getting the first cluster availible
         First = self.FSInfo.FirstAvail
         
-        print("Fisrt : " + str(First))
         #allocate the cluster (let filesystem know the cluster is no longer free)
         res = self.Cluster.allocate()
         #increment first file avail and dec avail cluster
@@ -50,7 +49,7 @@ class FSInfo:
         #self.Sector2 = Sector2
         #raw bytes to minimise Reads
         self.validate()
-        print(self.SectorAvail)
+
     
     #increment the first availible cluster counter and decrement the sector availible count
     def incAvailCluster(self):
@@ -87,7 +86,7 @@ class Cluster:
         self.cluster = firstAvail #point the cluster number to the newly created file
         self.Sector1.writeBytes(offset, convertLE(0x0fffffff,4),4)
         self.Sector2.writeBytes(offset, convertLE(0x0fffffff,4),4)
-        print("Allocating Sector" + str(firstAvail))
+
         return firstAvail
     
     #add more space to an existing file input the cluster number of the first cluster in the file
@@ -99,7 +98,7 @@ class Cluster:
         self.Sector2.writeBytes(offset, convertLE(firstAvail,4),4)
 
         #next allocate the new cluster to the file
-        print("pointing cluster " + str(self.cluster))
+
         return self.allocate()
 
     def findFirst(self,cluster):
