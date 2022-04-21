@@ -1,9 +1,13 @@
+from pickle import TRUE
 import IMU
 import MAG
 import board
 import busio
 import os
 import sys
+import BTooth
+import USB
+import threading
 
 sys.path.insert(1, '/home/pi/Project2/PiCode_Rework/FatFSLib')
 
@@ -30,4 +34,5 @@ while writes < 1000:
     fat.writeFile('write #: ' + str(writes) + '\r\n')
     writes+=111
     print(writes)
+
 
