@@ -100,9 +100,11 @@ class DirectoryFat:
     def addSize(self,size):
         #start by getting the current size of the file 
         currSize = self.ShortDir.FileSize
-
+        print("size : " + str(currSize))
         #write the new file size and validate
         self.Sector.writeBytes(self.offset+32+28,convertLE(currSize+size,4),4)
+        
+        self.validate()
 
     #implement later. makes the directory object point to a directory the user is writing to
     #def openDir()
