@@ -8,6 +8,7 @@ def sendUSB(str):
     if device.isOpen():
         print ("USB is open\r\n")
         str2 = str.encode()
+        #device.write_timeout = 0.1
         device.write(str2)
         print("message: " + str + " has been sent\r\n")
         device.close()

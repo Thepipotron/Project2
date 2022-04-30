@@ -1,18 +1,5 @@
 
 
-#Bluetooth Module 
-
-#Connections
-
-#State -------- No Connection
-#RXD ---------- GPIO15 (UART RX)
-#TXD ---------- GPIO14 (UART TX)
-#GND ---------- Ground
-#VCC ---------- 5V
-#EN ----------- No Connection
-
-
-
 import serial
 import time
 

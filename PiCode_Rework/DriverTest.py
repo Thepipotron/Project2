@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import sys
 import BTooth
 import USB
@@ -9,6 +10,7 @@ import board
 from datetime import datetime
 import busio
 from board import *
+import digitalio
 
 sys.path.append('/home/pi/Project2/PiCode_Rework/GPSLib')
 sys.path.append('/home/pi/Project2/PiCode_Rework/FatFSLib')
@@ -23,9 +25,11 @@ def main():
     #setup fatfs filesystem
     try:
         disk = Disk()
+        print("disk done")
         fat = FatFs(disk)
+        print("Fat created")
         fat.newFile('DATA.CSV')
-
+        print("file created")
     #Write the headers to the file
         fat.writeFile("Date,Time,Locked GPS,Latitude deg,Latitude min,N/S,Longitude deg,Longitude min,W/E,MSL Elevation,X_ACC (m/s^2),Y_ACC (m/s^2),Z_ACC (m/s^2),")
         fat.writeFile("X_GYRO (rps),Y_GYRO (rps),Z_GYRO (rps),X_MAG (uT),Y_MAG (uT),Z_MAG (uT)\r\n")
@@ -34,20 +38,34 @@ def main():
 
     while 1:
         pass
+        #check for sd card good to remove
+        if(buttonCheck.value == 0):
+            sd = 0
+            ledSafe.value = 1
         
+        #initialize gpsu
         I2C = board.I2C()
         gps = GPS(busio.I2C(SCL, SDA))
         
+
+        print("Getting GPS")
         gpsInfo = gps.getGPSCombined()
+        lock = int(gps.getLock())
         now = datetime.now()
+        
+        if lock > 3:
+            ledGPS.value = 1
+        else:
+            ledGPS.value = 0
+
+       
+        magInfo = MAG.getMAGCombined(I2C)
+        accInfo = IMU.getIMUCombined(I2C)
+
+       
         dt_string = now.strftime("%d/%m/%Y %H:%M:%S").split(' ')
-        #magInfo = MAG.getMAGCombined(I2C)
-        #accInfo = IMU.getIMUCombined(I2C)
 
-
-
-
-        string = dt_string[0] + "," + dt_string[1] + "," + gpsInfo + "\r\n"
+        string = dt_string[0] + "," + dt_string[1] + "," + gpsInfo + "," +accInfo + "," + magInfo +"\r\n"
         BTooth.sendBtooth(string)
 
         try:
@@ -55,19 +73,30 @@ def main():
         except:
             pass
 
-        if sd == 1
+        if sd == 1:
+            print("sd is printing\r\n")
             try:
                 fat.writeFile(string)
             except:
                 pass
 
+#initialize button for SD card
+buttonCheck = digitalio.DigitalInOut(board.D4)
+buttonCheck.direction = digitalio.Direction.INPUT
+buttonCheck.pull = digitalio.Pull.UP
 
-main_thread = threading.Thread(name='main program',
-                               target=main, daemon=True)
-main_thread.start()
+#initialize GPS Lock LED
+ledGPS = digitalio.DigitalInOut(board.D5)
+ledGPS.direction = digitalio.Direction.OUTPUT
+
+#intiialize Safe to pull SD LED
+ledSafe = digitalio.DigitalInOut(board.D6)
+ledSafe.direction = digitalio.Direction.OUTPUT
 
 
-while True:
-    if input().lower() == 'kill':
-        print('Terminating program')
-        sys.exit(0)
+time.sleep(1)
+
+
+ledGPS.value = 1
+
+main()

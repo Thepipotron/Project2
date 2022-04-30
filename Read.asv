@@ -1,8 +1,18 @@
-device = bluetooth("HC-06");
-disp(device);
-configureCallback(device, "byte", 1, @readSerial);
+
+
+%USB Communication
+usb = serialport("/dev/tty.usbmodem14101", 9600);
+disp(usb);
+configureTerminator(usb, "CR");
+configureCallback(usb, "terminator", @readSerial);
+
+%Bluetooth Communication
+btooth = serialport("/dev/tty.HC-06", 9600);
+disp(btooth);
+configureTerminator(btooth, "CR");
+configureCallback(btooth, "terminator", @readSerial)
 
 function readSerial(src,~)
-    data = read(src,,"string");
+    data = readline(src);
     disp(data);
 end
